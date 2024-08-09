@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  private_client_id: 
+  location: MyString
+  verification_type: MyString
+  verification_document_url: MyText
+
+two:
+  private_client_id: 
+  location: MyString
+  verification_type: MyString
+  verification_document_url: MyText
