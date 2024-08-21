@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_08_07_090605) do
+ActiveRecord::Schema[7.1].define(version: 2024_08_14_194156) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -35,6 +35,14 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_07_090605) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_companies_on_user_id", unique: true
+  end
+
+  create_table "feedbacks", primary_key: "feedback_id", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "feedback_text"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_feedbacks_on_user_id"
   end
 
   create_table "job_applications", primary_key: "job_application_id", force: :cascade do |t|
@@ -92,7 +100,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_07_090605) do
   create_table "users", primary_key: "user_id", force: :cascade do |t|
     t.string "full_name"
     t.string "email"
-    t.string "password"
+    t.string "password_digest"
     t.string "telegram_user_id", null: false
     t.enum "role", null: false, enum_type: "user_roles"
     t.datetime "created_at", null: false
@@ -102,6 +110,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_07_090605) do
   end
 
   add_foreign_key "companies", "users", primary_key: "user_id"
+  add_foreign_key "feedbacks", "users", primary_key: "user_id"
   add_foreign_key "job_applications", "jobs", primary_key: "job_id"
   add_foreign_key "job_applications", "users", primary_key: "user_id"
   add_foreign_key "jobs", "users", primary_key: "user_id"

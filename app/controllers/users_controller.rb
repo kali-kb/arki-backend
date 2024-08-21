@@ -26,20 +26,14 @@ class UsersController < ApplicationController
   # POST /users.json
   def create
     @user = User.new(user_params)
-    
-    if @user.save
-      if @user.role == "private_client"
-        @private_client = PrivateClient.new(private_client_params)
-        @private_client.user_id = @user.user_id
-        @private_client.save
-      elsif @user.role == "company"
-        @company = Company.new(company_params)
-        @company.user_id = @user.user_id
-        @company.save
-      end
-      render :show, status: :created, location: @user
+    if User.exists?(email: user_params[:telegram_user_id])
+      render json: {error: "User with this telegram id already exists"}, status: :unprocessable_entity
     else
-      render json: @user.errors, status: :unprocessable_entity
+      if @user.save
+        render :show, status: :created, location: @user
+      else
+        render json: @user.errors, status: :unprocessable_entity
+      end
     end
   end
 
@@ -68,15 +62,30 @@ class UsersController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def user_params
-      params.require(:user).permit(:full_name, :email, :password, :telegram_user_id, :role)
+      # params.permit(:full_name, :email, :password, :telegram_user_id, :role)
+      params.require(:user).permit(:full_name, :email, :password, :telegram_user_id, :role,  
+      private_client_attributes: [
+        :location, 
+        :verification_type,
+        :verification_document_url
+      ],
+      company_attributes: [
+        :company_name,
+        :city,
+        :industry,
+        :logo_img_url,
+        :tin_no,
+        :company_description,
+        :website
+      ])
     end
 
-    def private_client_params
-      params.require(:private_client).permit(:location, :verification_type, :verification_document_url)
-      # Add other private client-specific parameters here
-    end
+    # def private_client_params
+    #   params.require(:private_client).permit(:location, :verification_type, :verification_document_url)
+    #   # Add other private client-specific parameters here
+    # end
     
-    def company_params
-      params.require(:company).permit(:company_name, :city, :industry, :logo_img_url, :tin_no, :company_description, :website, :company_logo_url)
-    end
+    # def company_params
+    #   params.require(:company_attributes).permit(:company_name, :city, :industry, :logo_img_url, :tin_no, :company_description, :website)
+    # end
 end

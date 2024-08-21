@@ -1,13 +1,5 @@
 Rails.application.routes.draw do
-  # resources :users do
-  #   resources :jobs
-  #   resources :saved_jobs
-  # end
-  # resources :companies
-  # resources :private_clients
-  # # resources :jobs
-  # resources :job_applications
-
+  resources :feedbacks
   resources :users do
     resources :jobs do
       resources :job_applications, only: [:create, :index, :destroy]
@@ -19,6 +11,19 @@ Rails.application.routes.draw do
   resources :private_clients
   resources :jobs, only: [:index, :show]
   resources :job_applications
+
+  post '/login', to: 'auth#login'
+
+
+  # resources :users do
+  #   resources :jobs
+  #   resources :saved_jobs
+  # end
+  # resources :companies
+  # resources :private_clients
+  # # resources :jobs
+  # resources :job_applications
+
 
   # get "job_search", to: "job#job_query"
 

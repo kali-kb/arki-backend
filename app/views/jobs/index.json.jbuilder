@@ -12,4 +12,5 @@ json.array! @jobs do |job|
       end
     end
   end
+  json.job_applications_count job.job_applications.count
 end
